@@ -29,10 +29,10 @@
     <file path="catalog/controller/checkout/success.php">
         <operation>
             <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
-            <add position="after"><![CDATA[
+            <add position="before"><![CDATA[
                 if (isset($_GET['error'])) {
                     $data['payment_error'] = $this->config->get('payment_payu_fail_message');
-                    $this->document->setTitle('Payment failed'); // todo read this from the language file somehow
+                    $this->document->setTitle('PayU error!');
                 }
             ]]></add>
         </operation>
