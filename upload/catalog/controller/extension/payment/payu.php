@@ -122,10 +122,17 @@ class ControllerExtensionPaymentPayU extends Controller
 
                     if ($orderInfo['status'] != OpenPayuOrderStatus::STATUS_COMPLETED) {
                         $newstatus = $this->getPaymentStatusId($payuOrderStatus);
+                        $comment = $this->getPaymentStatusEmail($payuOrderStatus);
+
+                        if ($comment) {
+                            $notify = true;
+                        } else {
+                            $comment = 'PayU Notification'; // displayed in the admin panel
+                        }
 
                         if ($newstatus && $newstatus != $order['order_status']) {
                             $this->model_extension_payment_payu->updateSatatus($session_id, $payuOrderStatus);
-                            $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus); // todo: $order_id, $order_status_id, $comment = '', $notify = false, $override = false
+                            $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus, $comment, $notify);
                         }
 
                     }
@@ -152,8 +159,6 @@ class ControllerExtensionPaymentPayU extends Controller
                     return $this->config->get('payment_payu_pending_status');
                 case OpenPayuOrderStatus::STATUS_WAITING_FOR_CONFIRMATION :
                     return $this->config->get('payment_payu_waiting_for_confirmation_status');
-                case OpenPayuOrderStatus::STATUS_REJECTED :
-                    return $this->config->get('payment_payu_returned_status');
                 case OpenPayuOrderStatus::STATUS_COMPLETED :
                     return $this->config->get('payment_payu_complete_status');
                 default:
@@ -162,6 +167,28 @@ class ControllerExtensionPaymentPayU extends Controller
         }
 
         return false;
+    }
+
+    private function getPaymentStatusEmail($paymentStatus)
+    {
+        $this->load->model('extension/payment/payu');
+        if (!empty($paymentStatus)) {
+
+            switch ($paymentStatus) {
+                case OpenPayuOrderStatus::STATUS_CANCELED:
+                    return $this->config->get('payment_payu_cancelled_status_email');
+                case OpenPayuOrderStatus::STATUS_PENDING:
+                    return $this->config->get('payment_payu_pending_status_email');
+                case OpenPayuOrderStatus::STATUS_WAITING_FOR_CONFIRMATION:
+                    return $this->config->get('payment_payu_waiting_for_confirmation_status_email');
+                case OpenPayuOrderStatus::STATUS_COMPLETED:
+                    return $this->config->get('payment_payu_complete_status_email');
+                default:
+                    return '';
+            }
+        }
+
+        return '';
     }
 
     private function buildOrder()

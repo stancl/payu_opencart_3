@@ -27,11 +27,16 @@ $_['entry_geo_zone'] = 'Strefa Geo';
 $_['entry_info'] = 'Informacje';
 $_['entry_environment'] = 'Środowisko';
 $_['entry_fail_message'] = 'Komunikat o błędzie';
+$_['entry_pending_status_email'] = 'Email powiadomienia PayU: Pending';
+$_['entry_complete_status_email'] = 'Email powiadomienia PayU: Completed';
+$_['entry_waiting_for_confirmation_status_email'] = 'Email powiadomienia PayU: Waiting For Confirmation';
+$_['entry_cancelled_status_email'] = 'Email powiadomienia PayU: Cancelled';
 
 // Help
 $_['help_total'] = 'Ta metoda płatności będzie dostępna gdy wartość koszyka przekroczy tę wartość.';
 $_['help_environment'] = '"secure" lub "sandbox".';
 $_['help_fail_message'] = 'Komunikat o błędzie, który pojawia się, gdy płatność nie zostanie odebrana.';
+$_['help_status_email'] = 'Wypełnij to pole, aby wysłać e-mail do klientów, gdy zmieni się status PayU.';
 
 // Error
 $_['error_permission'] = "Uwaga: Brak uprawnień do modyfikacji modułu 'PayU'!";

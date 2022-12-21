@@ -7,8 +7,6 @@
 * Jeżeli używasz OpenCart w wersji 2.0.x, 2.1.x lub 2.2.x proszę skorzystać z [pluginu w wersji 3.1.x][ext2]
 
 ## TODOs
-- Canceled notification should send an email to the customer with a configurable message (only do this if success mail is sent as well)
-- Installation instructions
 - Retry functionality (in the admin panel, let admins enter the order ID, and generate a payment URL)
 
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
@@ -18,6 +16,10 @@
 The repo is primarily for internal use but I made it public in case it helps anyone. There's no guarantee of support or long-term maintenance.
 
 To differentiate between this repo and the original one, we use our own versioning, starting from 1.0.0.
+
+## Installation
+
+Download this repo as a zip, extract the folder, and then compress the *contents* of that folder into a new zip that ends in `.ocmod.zip`.
 
 ## Testing cards
 
@@ -30,12 +32,36 @@ For more, see [the official docs](https://developers.payu.com/en/overview.html#s
 
 ## Sandbox credentials
 
+The sandbox credentials mentioned in the docs are:
+
 | Key                 | Value                            |
 |---------------------|----------------------------------|
 | POS ID              | 145227                           |
 | Second key (MD5)    | 13a980d4f851f3d9a1cfc792fb1f5e50 |
 | OAuth client_id     | 145227                           |
 | OAuth client_secret | 12f071174cb7eb79d4aac5bc2f07563f |
+
+However, these don't seem to work on my end. So I use a custom POS created in the sandbox environment.
+
+Since I use ngrok (see the section below), I have to create a new POS every time I have a new ngrok subdomain.
+
+### Local development
+
+To play with the sandbox environment locally, I do this:
+- host the site using simple `php -S` (`/opt/homebrew/Cellar/php@7.3/7.3.33_3/bin/php -S localhost:8888` since I'm using a specific binary to match OC's PHP version)
+- share the site using `ngrok http 8888`
+- modify `config.php` to use the `HTTP_HOST` for `HTTP_SERVER` & `HTTPS_SERVER` (though you have to revert this when using the site normally w/o ngrok):
+
+```diff
+- define('HTTP_SERVER', 'http://opencart.test/');
++ define('HTTP_SERVER', 'http://' . $_SERVER['HTTP_HOST'] . '/');
+- define('HTTPS_SERVER', 'http://opencart.test/');
++ define('HTTPS_SERVER', 'https://' . $_SERVER['HTTP_HOST'] . '/');
+```
+
+(`opencart.test` being the local domain I use to visit the site without ngrok)
+
+To test email, I use [Mailtrap](https://mailtrap.io/).
 
 ## Spis treści
 

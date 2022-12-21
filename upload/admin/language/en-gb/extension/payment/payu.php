@@ -27,11 +27,16 @@ $_['entry_geo_zone'] = 'Geo Zone';
 $_['entry_info'] = 'Info';
 $_['entry_environment'] = 'Environment';
 $_['entry_fail_message'] = 'Payment failed message';
+$_['entry_pending_status_email'] = 'PayU Notifications email: Pending';
+$_['entry_complete_status_email'] = 'PayU Notifications email: Completed';
+$_['entry_waiting_for_confirmation_status_email'] = 'PayU Notifications email: Waiting For Confirmation';
+$_['entry_cancelled_status_email'] = 'PayU Notifications email: Cancelled';
 
 // Help
 $_['help_total'] = 'The checkout total the order must reach before this payment method becomes active.';
 $_['help_environment'] = '"secure" or "sandbox".';
 $_['help_fail_message'] = 'Error message shown to the customer if the payment fails.';
+$_['help_status_email'] = 'Fill out to send a notification to the customer when PayU status changes.';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify module PayU !';

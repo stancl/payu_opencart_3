@@ -169,6 +169,13 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-pending-status-email"><span data-toggle="tooltip" title="{{ help_status_email }}">{{ entry_pending_status_email }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_pending_status_email" value="{{ payment_payu_pending_status_email }}" id="input-pending_status_email" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-complete-status">{{ entry_complete_status }}</label>
                         <div class="col-sm-10">
                             <select name="payment_payu_complete_status" id="input-complete-status" class="form-control">
@@ -180,6 +187,13 @@
                                     {% endif %}
                                 {% endfor %}
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-complete-status-email"><span data-toggle="tooltip" title="{{ help_status_email }}">{{ entry_complete_status_email }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_complete_status_email" value="{{ payment_payu_complete_status_email }}" id="input-complete_status_email" class="form-control" />
                         </div>
                     </div>
 
@@ -199,6 +213,13 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-waiting_for_confirmation-status-email"><span data-toggle="tooltip" title="{{ help_status_email }}">{{ entry_waiting_for_confirmation_status_email }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_waiting_for_confirmation_status_email" value="{{ payment_payu_waiting_for_confirmation_status_email }}" id="input-waiting_for_confirmation_status_email" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-cancelled-status">{{ entry_cancelled_status }}</label>
                         <div class="col-sm-10">
                             <select name="payment_payu_cancelled_status" id="input-cancelled-status" class="form-control">
@@ -211,6 +232,13 @@
                                 {% endfor %}
                                 <?php } ?>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-cancelled-status-email"><span data-toggle="tooltip" title="{{ help_status_email }}">{{ entry_cancelled_status_email }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_cancelled_status_email" value="{{ payment_payu_cancelled_status_email }}" id="input-cancelled_status_email" class="form-control" />
                         </div>
                     </div>
 
