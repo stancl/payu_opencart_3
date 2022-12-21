@@ -56,10 +56,10 @@ class ControllerExtensionPaymentPayU extends Controller
                 $status_desc = OpenPayU_Util::statusDesc($response->getStatus());
 
                 if ($response->getStatus() == 'SUCCESS') {
-                    $this->session->data['sessionId'] = $response->getResponse()->orderId;
+                    $this->session->data['payuSessionId'] = $response->getResponse()->orderId;
                     $this->model_extension_payment_payu->bindOrderIdAndSessionId(
                         $this->session->data['order_id'],
-                        $this->session->data['sessionId']
+                        $this->session->data['payuSessionId']
                     );
                     $this->model_checkout_order->addOrderHistory(
                         $this->session->data['order_id'],

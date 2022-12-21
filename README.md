@@ -7,7 +7,7 @@
 * Jeżeli używasz OpenCart w wersji 2.0.x, 2.1.x lub 2.2.x proszę skorzystać z [pluginu w wersji 3.1.x][ext2]
 
 ## TODOs
-- Canceled notification should send an email to the customer with a configurable message
+- Canceled notification should send an email to the customer with a configurable message (only do this if success mail is sent as well)
 - Installation instructions
 - Retry functionality (in the admin panel, let admins enter the order ID, and generate a payment URL)
 
@@ -27,6 +27,15 @@ To differentiate between this repo and the original one, we use our own versioni
 | 5100052384536818 | 02/32      | 123 | Lets you fail if you deny the 3DS |
 
 For more, see [the official docs](https://developers.payu.com/en/overview.html#sandbox_cards).
+
+## Sandbox credentials
+
+| Key                 | Value                            |
+|---------------------|----------------------------------|
+| POS ID              | 145227                           |
+| Second key (MD5)    | 13a980d4f851f3d9a1cfc792fb1f5e50 |
+| OAuth client_id     | 145227                           |
+| OAuth client_secret | 12f071174cb7eb79d4aac5bc2f07563f |
 
 ## Spis treści
 
