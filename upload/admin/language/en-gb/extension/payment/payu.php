@@ -26,9 +26,12 @@ $_['entry_total'] = 'Total';
 $_['entry_geo_zone'] = 'Geo Zone';
 $_['entry_info'] = 'Info';
 $_['entry_environment'] = 'Environment';
+$_['entry_fail_message'] = 'Payment failed message';
 
 // Help
 $_['help_total'] = 'The checkout total the order must reach before this payment method becomes active.';
+$_['help_environment'] = '"secure" or "sandbox".';
+$_['help_fail_message'] = 'Error message shown to the customer if the payment fails.';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify module PayU !';

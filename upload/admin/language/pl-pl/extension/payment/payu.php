@@ -26,9 +26,12 @@ $_['entry_total'] = 'Suma zamówienia';
 $_['entry_geo_zone'] = 'Strefa Geo';
 $_['entry_info'] = 'Informacje';
 $_['entry_environment'] = 'Środowisko';
+$_['entry_fail_message'] = 'Komunikat o błędzie';
 
 // Help
 $_['help_total'] = 'Ta metoda płatności będzie dostępna gdy wartość koszyka przekroczy tę wartość.';
+$_['help_environment'] = '"secure" lub "sandbox".';
+$_['help_fail_message'] = 'Komunikat o błędzie, który pojawia się, gdy płatność nie zostanie odebrana.';
 
 // Error
 $_['error_permission'] = "Uwaga: Brak uprawnień do modyfikacji modułu 'PayU'!";

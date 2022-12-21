@@ -8,6 +8,8 @@
 
 ## TODOs
 - Canceled notification should send an email to the customer with a configurable message
+- Installation instructions
+- Retry functionality (in the admin panel, let admins enter the order ID, and generate a payment URL)
 
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
 - Shows error on fail

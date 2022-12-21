@@ -125,7 +125,7 @@ class ControllerExtensionPaymentPayU extends Controller
 
                         if ($newstatus && $newstatus != $order['order_status']) {
                             $this->model_extension_payment_payu->updateSatatus($session_id, $payuOrderStatus);
-                            $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus);
+                            $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus); // todo: $order_id, $order_status_id, $comment = '', $notify = false, $override = false
                         }
 
                     }
@@ -212,7 +212,6 @@ class ControllerExtensionPaymentPayU extends Controller
      */
     private function buildCustomerInOrder($order_info)
     {
-
         if (!empty($order_info['email'])) {
             $this->ocr['buyer'] = array(
                 'email' => $order_info['email'],

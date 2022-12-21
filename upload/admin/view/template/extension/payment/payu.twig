@@ -79,7 +79,17 @@
                     </div>
 
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-environment"> {{ entry_environment }}</label>
+                        <label class="col-sm-2 control-label" for="input-fail_message"><span data-toggle="tooltip" title="{{ help_fail_message }}">{{ entry_fail_message }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_fail_message" value="{{ payment_payu_fail_message }}" id="input-fail_message" class="form-control" />
+                            {% if error_fail_message %}
+                            <div class="text-danger">{{ error_fail_message }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-environment"><span data-toggle="tooltip" title="{{ help_environment }}">{{ entry_environment }}</span></label>
                         <div class="col-sm-10">
                             <input type="text" name="payment_payu_environment" value="{{ payment_payu_environment }}" id="input-environment" class="form-control" />
                             {% if error_environment %}

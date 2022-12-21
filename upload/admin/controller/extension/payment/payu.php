@@ -23,8 +23,9 @@ class ControllerExtensionPaymentPayU extends Controller {
 
         $data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $data['error_signaturekey'] = isset($this->error['signaturekey']) ? $this->error['signaturekey'] : '';
-        $data['error_merchantposid'] = isset($this->error['merchantposid']) ? $this->error['merchantposid'] : '';
+        $data['error_fail_message'] = isset($this->error['fail_message']) ? $this->error['fail_message'] : '';
         $data['error_environment'] = isset($this->error['environment']) ? $this->error['environment'] : '';
+        $data['error_merchantposid'] = isset($this->error['merchantposid']) ? $this->error['merchantposid'] : '';
         $data['error_oauth_client_id'] = isset($this->error['oauth_client_id']) ? $this->error['oauth_client_id'] : '';
         $data['error_oauth_client_secret'] = isset($this->error['oauth_client_secret']) ? $this->error['oauth_client_secret'] : '';
 
@@ -41,6 +42,9 @@ class ControllerExtensionPaymentPayU extends Controller {
 
         $data['payment_payu_signaturekey'] = isset($this->request->post['payment_payu_signaturekey']) ?
             $this->request->post['payment_payu_signaturekey'] : $this->config->get('payment_payu_signaturekey');
+
+        $data['payment_payu_fail_message'] = isset($this->request->post['payment_payu_fail_message']) ?
+        $this->request->post['payment_payu_fail_message'] : $this->config->get('payment_payu_fail_message');
 
         $data['payment_payu_environment'] = isset($this->request->post['payment_payu_environment']) ?
             $this->request->post['payment_payu_environment'] : $this->config->get('payment_payu_environment');
@@ -120,7 +124,6 @@ class ControllerExtensionPaymentPayU extends Controller {
         if (!$this->request->post['payment_payu_oauth_client_secret']) {
             $this->error['oauth_client_secret'] = $this->language->get('error_oauth_client_secret');
         }
-
         if (!$this->request->post['payment_payu_environment']) {
             $this->error['environment'] = $this->language->get('error_environment');
         }
@@ -141,6 +144,8 @@ class ControllerExtensionPaymentPayU extends Controller {
             'payment_payu_waiting_for_confirmation_status' => 1,
             'payment_payu_geo_zone_id' => 0,
             'payment_payu_sort_order' => 1,
+            'payment_payu_environment' => 'secure',
+            'payment_payu_fail_message' => 'Payment failed. The order has been canceled. To try again, please create a new order.',
         );
         $this->model_setting_setting->editSetting('payment_payu', $this->settings);
         $this->model_extension_payment_payu->createDatabaseTables();

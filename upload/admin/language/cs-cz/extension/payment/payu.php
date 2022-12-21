@@ -26,9 +26,12 @@ $_['entry_total'] = 'Celkem';
 $_['entry_geo_zone'] = 'Geo Zóna';
 $_['entry_info'] = 'Informace';
 $_['entry_environment'] = 'Prostředí';
+$_['entry_fail_message'] = 'Chybová hláška';
 
 // Help
 $_['help_total'] = 'Tento způsob platby bude dostupný pokud celková částka objednávky dosáhne této hodnoty.';
+$_['help_environment'] = '"secure" nebo "sandbox".';
+$_['help_fail_message'] = 'Chybová hláška, která se zobrazí, když platba není přijata.';
 
 // Error
 $_['error_permission'] = 'Warning: Nemáte oprávnění upravovat modul PayU!';
