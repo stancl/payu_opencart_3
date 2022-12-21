@@ -8,10 +8,12 @@
 
 ## TODOs
 - Retry functionality (in the admin panel, let admins enter the order ID, and generate a payment URL)
+- Maybe: if payment fails, add products back to cart
 
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
-- Shows error on fail
-- Lets you use the sandbox environment
+- Shows error on fail (instead of a success message — on the `checkout/success` route)
+- [Lets you use the sandbox environment](#local-development)
+- [Lets you send customers email notifications](#customer-notifications)
 
 The repo is primarily for internal use but I made it public in case it helps anyone. There's no guarantee of support or long-term maintenance.
 
@@ -19,7 +21,24 @@ To differentiate between this repo and the original one, we use our own versioni
 
 ## Installation
 
-Download this repo as a zip, extract the folder, and then compress the *contents* of that folder into a new zip that ends in `.ocmod.zip`.
+[Download this repo as a zip](https://github.com/stancl/payu_opencart_3/archive/refs/heads/master.zip), extract the folder, and then compress the *contents of that folder* into a new zip that ends in `.ocmod.zip`.
+
+## Customer notifications
+
+One of the features this fork adds is notifying customers when the PayU status of their order changes.
+
+To enable this, simple fill out the *PayU Notifications email* fields in the extension config, for each status that you want to notify the customer about.
+
+A few notes:
+- Per [the docs](https://developers.payu.com/en/restapi.html#status_update): *"To enable `WAITING_FOR_CONFIRMATION` status, payment methods on your POS need to have auto-receive turned off. Otherwise, all successful payments for an order will automatically trigger `COMPLETED` status."*. This means that if you have auto-receive enabled (you most likely do), you won't receive the `WAITING_FOR_CONFIRMATION` status at all.
+- On successful payments, the flow is like this:
+    - `Status of the new transaction` set
+    - After the customer makes a payment: `PayU Notifications Status: Pending` is set
+    - Immediately afterwards: `PayU Notifications Status: Completed` is set
+    - **Therefore**: you likely don't want to be sending notifications for the *Pending* status
+- The same happens with unsuccessful payments. The only difference is that the last notification is for `Cancelled` instead of `Completed`, but the rest of the flow is identical (including `Pending` being sent first).
+
+If the *PayU Notifications email* field is empty (for any status), the extension will not notify the customer about the status being set, and it will use `PayU Notification` as the comment, to make it clear that the status comes from PayU.
 
 ## Testing cards
 

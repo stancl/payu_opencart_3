@@ -70,14 +70,26 @@ class ControllerExtensionPaymentPayU extends Controller {
         $data['payment_payu_cancelled_status'] = isset($this->request->post['payment_payu_cancelled_status']) ?
             $this->request->post['payment_payu_cancelled_status'] : $this->config->get('payment_payu_cancelled_status');
 
+        $data['payment_payu_cancelled_status_email'] = isset($this->request->post['payment_payu_cancelled_status_email']) ?
+            $this->request->post['payment_payu_cancelled_status_email'] : $this->config->get('payment_payu_cancelled_status_email');
+
         $data['payment_payu_pending_status'] = isset($this->request->post['payment_payu_pending_status']) ?
             $this->request->post['payment_payu_pending_status'] : $this->config->get('payment_payu_pending_status');
+
+        $data['payment_payu_pending_status_email'] = isset($this->request->post['payment_payu_pending_status_email']) ?
+            $this->request->post['payment_payu_pending_status_email'] : $this->config->get('payment_payu_pending_status_email');
 
         $data['payment_payu_complete_status'] = isset($this->request->post['payment_payu_complete_status']) ?
             $this->request->post['payment_payu_complete_status'] : $this->config->get('payment_payu_complete_status');
 
+        $data['payment_payu_complete_status_email'] = isset($this->request->post['payment_payu_complete_status_email']) ?
+            $this->request->post['payment_payu_complete_status_email'] : $this->config->get('payment_payu_complete_status_email');
+
         $data['payment_payu_waiting_for_confirmation_status'] = isset($this->request->post['payment_payu_waiting_for_confirmation_status']) ?
              $this->request->post['payment_payu_waiting_for_confirmation_status']:  $this->config->get('payment_payu_waiting_for_confirmation_status');
+
+        $data['payment_payu_waiting_for_confirmation_status_email'] = isset($this->request->post['payment_payu_waiting_for_confirmation_status_email']) ?
+             $this->request->post['payment_payu_waiting_for_confirmation_status_email']:  $this->config->get('payment_payu_waiting_for_confirmation_status_email');
 
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(
