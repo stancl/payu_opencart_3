@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <code>payu_integration</code>
+    <name>PayU Integration</name>
+    <version>1.0.0</version>
+    <author>Samuel Štancl</author>
+    <link>https://github.com/stancl/plugin_opencart_3</link>
+    <file path="catalog/view/theme/default/template/common/success.twig">
+        <operation>
+            <search><![CDATA[<div id="content" class="{{ class }}">{{ content_top }}]]></search>
+            <add position="after"><![CDATA[
+                {% if payment_error %}
+                    <div class="alert alert-danger">
+                        <i class="fa fa-exclamation-circle"></i>
+                        {{ payment_error }}
+                    </div>
+                {% else %}
+            ]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[{{ content_bottom }}]]></search>
+            <add position="before"><![CDATA[
+                {% endif %}
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/checkout/success.php">
+        <operation>
+            <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
+            <add position="after"><![CDATA[
+                if (isset($_GET['error'])) {
+                    $data['payment_error'] = 'Payment failed. The order has been canceled.'; // todo configurable string
+                    $this->document->setTitle('Payment failed'); // todo configurable string
+                }
+            ]]></add>
+        </operation>
+    </file>
+</modification>

@@ -25,6 +25,7 @@ $_['entry_new_status'] = 'Status of the new transaction';
 $_['entry_total'] = 'Total';
 $_['entry_geo_zone'] = 'Geo Zone';
 $_['entry_info'] = 'Info';
+$_['entry_environment'] = 'Environment';
 
 // Help
 $_['help_total'] = 'The checkout total the order must reach before this payment method becomes active.';
@@ -35,3 +36,4 @@ $_['error_merchantposid'] = '"POS ID" is required!';
 $_['error_signaturekey'] = '"Second key (MD5)" is required!';
 $_['error_oauth_client_id'] = '"OAuth protocol - client_id" is required!';
 $_['error_oauth_client_secret'] = '"OAuth protocol - client_secret" is required!';
+$_['error_environment'] = 'The environment must be "secure" or "sandbox"!';

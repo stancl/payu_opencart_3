@@ -25,6 +25,7 @@ $_['entry_new_status'] = 'Status nowego zamówienia';
 $_['entry_total'] = 'Suma zamówienia';
 $_['entry_geo_zone'] = 'Strefa Geo';
 $_['entry_info'] = 'Informacje';
+$_['entry_environment'] = 'Środowisko';
 
 // Help
 $_['help_total'] = 'Ta metoda płatności będzie dostępna gdy wartość koszyka przekroczy tę wartość.';
@@ -35,3 +36,4 @@ $_['error_merchantposid'] = 'Podanie "Id punktu płatności" jest wymagane!';
 $_['error_signaturekey'] = 'Podanie "Drugi klucz (MD5)" jest wymagane!';
 $_['error_oauth_client_id'] = 'Podanie "OAuth - client_id" jest wymagane!';
 $_['error_oauth_client_secret'] = 'Podanie "OAuth - client_secret" wymagane!';
+$_['error_environment'] = 'Środowisko musi być "secure" lub "sandbox"!';

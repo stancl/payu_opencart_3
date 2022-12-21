@@ -6,6 +6,25 @@
 * Jeżeli używasz OpenCart w wersji 2.3.x proszę skorzystać z [pluginu w wersji 3.2.x][ext1]
 * Jeżeli używasz OpenCart w wersji 2.0.x, 2.1.x lub 2.2.x proszę skorzystać z [pluginu w wersji 3.1.x][ext2]
 
+## TODOs
+- Canceled notification should send an email to the customer with a configurable message
+
+## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
+- Shows error on fail
+- Lets you use the sandbox environment
+
+The repo is primarily for internal use but I made it public in case it helps anyone. There's no guarantee of support or long-term maintenance.
+
+To differentiate between this repo and the original one, we use our own versioning, starting from 1.0.0.
+
+## Testing cards
+
+| Card number      | Expiration | CVV | Behavior                          |
+|------------------|------------|-----|-----------------------------------|
+| 4444333322221111 | 12/29      | 123 | Pass                              |
+| 5100052384536818 | 02/32      | 123 | Lets you fail if you deny the 3DS |
+
+For more, see [the official docs](https://developers.payu.com/en/overview.html#sandbox_cards).
 
 ## Spis treści
 

@@ -1,7 +1,7 @@
 <?php
 class ControllerExtensionPaymentPayU extends Controller {
 
-    const VERSION = '3.3.2';
+    const VERSION = '1.0.0';
 
     private $error = array();
     private $settings = array();
@@ -24,6 +24,7 @@ class ControllerExtensionPaymentPayU extends Controller {
         $data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $data['error_signaturekey'] = isset($this->error['signaturekey']) ? $this->error['signaturekey'] : '';
         $data['error_merchantposid'] = isset($this->error['merchantposid']) ? $this->error['merchantposid'] : '';
+        $data['error_environment'] = isset($this->error['environment']) ? $this->error['environment'] : '';
         $data['error_oauth_client_id'] = isset($this->error['oauth_client_id']) ? $this->error['oauth_client_id'] : '';
         $data['error_oauth_client_secret'] = isset($this->error['oauth_client_secret']) ? $this->error['oauth_client_secret'] : '';
 
@@ -40,6 +41,9 @@ class ControllerExtensionPaymentPayU extends Controller {
 
         $data['payment_payu_signaturekey'] = isset($this->request->post['payment_payu_signaturekey']) ?
             $this->request->post['payment_payu_signaturekey'] : $this->config->get('payment_payu_signaturekey');
+
+        $data['payment_payu_environment'] = isset($this->request->post['payment_payu_environment']) ?
+            $this->request->post['payment_payu_environment'] : $this->config->get('payment_payu_environment');
 
         $data['payment_payu_merchantposid'] = isset($this->request->post['payment_payu_merchantposid']) ?
             $this->request->post['payment_payu_merchantposid'] : $this->config->get('payment_payu_merchantposid');
@@ -115,6 +119,10 @@ class ControllerExtensionPaymentPayU extends Controller {
         }
         if (!$this->request->post['payment_payu_oauth_client_secret']) {
             $this->error['oauth_client_secret'] = $this->language->get('error_oauth_client_secret');
+        }
+
+        if (!$this->request->post['payment_payu_environment']) {
+            $this->error['environment'] = $this->language->get('error_environment');
         }
 
         return !$this->error;

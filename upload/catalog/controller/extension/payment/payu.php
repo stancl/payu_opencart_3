@@ -27,7 +27,7 @@ class ControllerExtensionPaymentPayU extends Controller
         OpenPayU_Configuration::setSignatureKey($this->config->get('payment_payu_signaturekey'));
         OpenPayU_Configuration::setOauthClientId($this->config->get('payment_payu_oauth_client_id'));
         OpenPayU_Configuration::setOauthClientSecret($this->config->get('payment_payu_oauth_client_secret'));
-        OpenPayU_Configuration::setEnvironment();
+        OpenPayU_Configuration::setEnvironment($this->config->get('payment_payu_environment'));
         OpenPayU_Configuration::setSender('OpenCart ver ' . VERSION . ' / Plugin ver ' . self::VERSION);
         $this->logger = new Log('payu.log');
     }
