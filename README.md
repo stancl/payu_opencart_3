@@ -20,6 +20,8 @@ The repo is primarily for internal use but I made it public in case it helps any
 
 To differentiate between this repo and the original one, we use our own versioning, starting from 1.0.0.
 
+You can view all of the changes here: [`bfcfc5b...HEAD`](https://github.com/stancl/payu_opencart_3/compare/bfcfc5b2d07ecf7030d680e9e6657c14765086e1...HEAD)
+
 ## Installation
 
 [Download this repo as a zip](https://github.com/stancl/payu_opencart_3/archive/refs/heads/master.zip), extract the folder, and then compress the *contents of that folder* into a new zip that ends in `.ocmod.zip`.
