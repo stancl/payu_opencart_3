@@ -16,3 +16,9 @@ $_['text_title'] = 'PayU';
 $_['text_payu_order'] = 'Zamówienie';
 $_['text_payu_discount'] = 'Rabat';
 $_['text_error_message'] = 'Nie udało się utworzyć zamówienia w Systemie PayU. Proszę spróbować ponownie lub skontaktować się z obsługą sklepu.';
+
+// Retry payment
+$_['retry_not_found'] = 'Nie znaleziono zamówienia.';
+$_['retry_already_paid'] = 'Zamówienie zostało już opłacone.';
+$_['retry_pending'] = 'Rejestrujemy płatność za zamówienie, które jest jeszcze w trakcie realizacji. Spróbuj ponownie później.';
+$_['retry_pay_button'] = 'Płacić';

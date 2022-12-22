@@ -40,6 +40,86 @@ class ControllerExtensionPaymentPayU extends Controller
         return $this->load->view('extension/payment/payu', $data);
     }
 
+    public function retry()
+    {
+        $this->language->load('extension/payment/payu');
+
+        $this->response->addHeader('Content-Type: text/html');
+
+        $orderId = isset($_GET['orderId']) ? $_GET['orderId'] : null;
+        $email = isset($_GET['email']) ? $_GET['email'] : null;
+        $total = (float) (isset($_GET['total']) ? $_GET['total'] : 0);
+
+        if ((! $orderId) || (! $email) || (! $total)) {
+            $this->response->setOutput($this->language->get('retry_not_found'));
+
+            return;
+        }
+
+        $this->load->model('checkout/order');
+
+        $order = $this->model_checkout_order->getOrder($orderId);
+
+        $orderTotal = (float) $order['total'];
+        if (($email !== $order['email']) || ($total !== $orderTotal)) {
+            $this->response->setOutput($this->language->get('retry_not_found'));
+
+            return;
+        }
+
+        $this->load->model('extension/payment/payu');
+        $sessions = $this->model_extension_payment_payu->getSessionsForOrder($order['order_id']);
+
+        foreach ($sessions as $session) {
+            if ($session['status'] === 'COMPLETED') {
+                $this->response->setOutput($this->language->get('retry_already_paid'));
+
+                return;
+            }
+
+            if ($session['status'] === 'PENDING') {
+                // TODO: Not sure how this deals with bounces (i.e. customer leaving the payment page). Will adjust code if needed. Ideally PayU will send a cancelation after some time.
+                $this->response->setOutput($this->language->get('pending'));
+
+                return;
+            }
+        }
+
+        $payuOrder = $this->buildOrder($order['order_id']);
+
+        try {
+            $response = OpenPayU_Order::create($payuOrder);
+            $status_desc = OpenPayU_Util::statusDesc($response->getStatus());
+
+            if ($response->getStatus() == 'SUCCESS') {
+                $this->session->data['payuSessionId'] = $response->getResponse()->orderId;
+                $this->model_extension_payment_payu->bindOrderIdAndSessionId(
+                    $order['order_id'],
+                    $this->session->data['payuSessionId']
+                );
+                $this->model_checkout_order->addOrderHistory(
+                    $order['order_id'],
+                    $this->config->get('payment_payu_new_status')
+                );
+
+                $paymentUrl = $response->getResponse()->redirectUri . '&lang=' . substr($this->session->data['language'], 0, 2);
+
+                $this->response->addHeader('Location: ' . $paymentUrl);
+                $this->response->setOutput("<a href='$paymentUrl'>Zaplatit</a>");
+            } else {;
+                $this->logger->write('OCR: ' . serialize($payuOrder));
+                $this->logger->write($response->getError() . ' [request: ' . serialize($response) . ']');
+                $this->response->setOutput(
+                    'ERROR: ' . $this->language->get('text_error_message') . '(' . $response->getStatus() . ': ' . $status_desc . ')'
+                );
+            }
+        } catch (OpenPayU_Exception $e) {
+            $this->logger->write('OCR: ' . serialize($payuOrder));
+            $this->logger->write('OCR Exception: ' . $e->getMessage());
+            $this->response->setOutput('ERROR: ' . $this->language->get('text_error_message'));
+        }
+    }
+
     public function pay()
     {
         if ($this->session->data['payment_method']['code'] == 'payu') {
@@ -191,16 +271,15 @@ class ControllerExtensionPaymentPayU extends Controller
         return '';
     }
 
-    private function buildOrder()
+    private function buildOrder($orderId = null)
     {
-
         $this->language->load('extension/payment/payu');
         $this->load->model('extension/payment/payu');
         $this->loadLibConfig();
 
         //get order info
         $this->load->model('checkout/order');
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = $this->model_checkout_order->getOrder($orderId ?: $this->session->data['order_id']);
 
         //OCR basic data
         $this->ocr['merchantPosId'] = OpenPayU_Configuration::getMerchantPosId();
@@ -219,11 +298,16 @@ class ControllerExtensionPaymentPayU extends Controller
         $this->buildCustomerInOrder($order_info);
 
         //OCR products
-        $this->buildProductsInOrder($this->cart->getProducts(), $order_info['currency_code']);
+        $this->buildProductsInOrder($this->model_checkout_order->getOrderProducts($order_info['order_id']), $order_info['currency_code']);
 
         //OCR shipping
-        if ($this->cart->hasShipping()) {
-            $this->buildShippingInOrder($this->session->data['shipping_method'], $order_info['currency_code']);
+        if ($order_info['shipping_code']) {
+            $totals = $this->model_checkout_order->getOrderTotals($order_info['order_id']);
+            $shipping = array_filter($totals, function ($total) {
+                return $total['code'] === 'shipping';
+            });
+
+            $this->buildShippingInOrder(['title' => $shipping['title'], 'cost' => $shipping['value']], $order_info['currency_code']);
         }
 
         if ($this->ocr['totalAmount'] < $this->totalWithoutDiscount) {
@@ -252,23 +336,16 @@ class ControllerExtensionPaymentPayU extends Controller
     /**
      * @param array $products
      */
-    private function buildProductsInOrder($products, $currencyCode)
+    private function buildProductsInOrder($products)
     {
-        foreach ($products as $item) {
-
-            $gross = $this->currencyFormat(
-                $this->tax->calculate($item['price'], $item['tax_class_id'], $this->config->get('config_tax')),
-                $currencyCode
-            );
-            $itemGross = $this->toAmount($gross);
-
+        foreach ($products as $product) {
             $this->ocr['products'][] = array(
-                'quantity' => $item['quantity'],
-                'name' => substr($item['name'], 0, 250),
-                'unitPrice' => $itemGross
+                'quantity' => (int) $product['quantity'],
+                'name' => substr($product['name'], 0, 250),
+                'unitPrice' => $this->toAmount($product['price']),
             );
 
-            $this->totalWithoutDiscount += $itemGross;
+            $this->totalWithoutDiscount += $this->toAmount($product['total']);
         }
     }
 

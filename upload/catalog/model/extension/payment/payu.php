@@ -65,4 +65,16 @@ class ModelExtensionPaymentPayu extends Model
 
         return $result;
     }
+
+    public function getSessionsForOrder($orderId)
+    {
+        $query = 'SELECT order_id, status FROM ' . DB_PREFIX . 'payu_so WHERE order_id ="' . $this->db->escape($orderId) . '"';
+        $result = $this->db->query($query)->rows;
+
+        if (!$result) {
+            return null;
+        }
+
+        return $result;
+    }
 }

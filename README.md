@@ -7,8 +7,9 @@
 * Jeżeli używasz OpenCart w wersji 2.0.x, 2.1.x lub 2.2.x proszę skorzystać z [pluginu w wersji 3.1.x][ext2]
 
 ## TODOs
-- Retry functionality (in the admin panel, let admins enter the order ID, and generate a payment URL)
-- Maybe: if payment fails, add products back to cart
+- Link to retry link right in the error message
+- Button for retrying payment in admin panel
+- Notification messages could be textareas to support multi-line comments
 
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
 - Shows error on fail (instead of a success message — on the `checkout/success` route)
