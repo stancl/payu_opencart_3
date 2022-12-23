@@ -1,15 +1,6 @@
 # Moduł PayU dla OpenCart wersja 3.x
 ``Moduł jest wydawany na licencji GPL.``
 
-**Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext7].**
-
-* Jeżeli używasz OpenCart w wersji 2.3.x proszę skorzystać z [pluginu w wersji 3.2.x][ext1]
-* Jeżeli używasz OpenCart w wersji 2.0.x, 2.1.x lub 2.2.x proszę skorzystać z [pluginu w wersji 3.1.x][ext2]
-
-## TODOs
-- Link to retry page right in the error message (likely search for `<td>{{ text_affiliate }}`)
-- Link to retry page in email
-
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
 - Shows error on fail (instead of a success message — on the `checkout/success` route)
 - [Lets you use the sandbox environment](#local-development)
@@ -24,6 +15,8 @@ You can view all of the changes here: [`bfcfc5b...HEAD`](https://github.com/stan
 ## Installation
 
 [Download this repo as a zip](https://github.com/stancl/payu_opencart_3/archive/refs/heads/master.zip), extract the folder, and then compress the *contents of that folder* into a new zip that ends in `.ocmod.zip`. Meaning: `install.xml` should be at the root of the zip file.
+
+Alternatively, you can clone the repo and run `./build.sh` (if you're on Mac/Linux) to create `payu.ocmod.zip`.
 
 ## Customer notifications
 
@@ -89,6 +82,11 @@ To test email, I use [Mailtrap](https://mailtrap.io/).
 - The repo uses `canceled` and `cancelled` inconsistently. I kept the inconsistency for backwards compatibility with the old repo (and old config data).
     - `CANCELED` is used in the context of PayU responses
     - `cancelled` is used in the context of language strings, config keys, and everything that relates to the extension settings page
+
+**Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext7].**
+
+* Jeżeli używasz OpenCart w wersji 2.3.x proszę skorzystać z [pluginu w wersji 3.2.x][ext1]
+* Jeżeli używasz OpenCart w wersji 2.0.x, 2.1.x lub 2.2.x proszę skorzystać z [pluginu w wersji 3.1.x][ext2]
 
 ## Spis treści
 

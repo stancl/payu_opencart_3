@@ -5,6 +5,15 @@
     <version>1.0.0</version>
     <author>Samuel Štancl</author>
     <link>https://github.com/stancl/payu_opencart_3</link>
+    <file path="system/library/template/twig.php">
+        <operation>
+            <search><![CDATA[$this->twig = new \Twig_Environment($loader, $config);]]></search>
+            <add position="after"><![CDATA[
+                $this->twig->addFilter(new \Twig_SimpleFilter('html_entity_decode', 'html_entity_decode'));
+            ]]></add>
+        </operation>
+    </file>
+
     <file path="catalog/view/theme/default/template/common/success.twig">
         <operation>
             <search><![CDATA[<div id="content" class="{{ class }}">{{ content_top }}]]></search>
@@ -12,7 +21,7 @@
                 {% if payment_error %}
                     <div class="alert alert-danger">
                         <i class="fa fa-exclamation-circle"></i>
-                        {{ payment_error }}
+                        {{ payment_error | html_entity_decode }}
                     </div>
                 {% else %}
             ]]></add>
@@ -28,10 +37,24 @@
 
     <file path="catalog/controller/checkout/success.php">
         <operation>
+            <search><![CDATA[if (isset($this->session->data['order_id'])) {]]></search>
+            <add position="after"><![CDATA[
+                    $this->load->model('checkout/order');
+
+                    $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+                    $payuOrderTotal = (string) ((float) $order_info['total']);
+                    $payuRetryUrl = $this->url->link('extension/payment/payu/retry') . "&orderId={$order_info['order_id']}&email={$order_info['email']}&total={$payuOrderTotal}";
+                    $payuFailMessage = str_replace('%retry%', $payuRetryUrl, $this->config->get('payment_payu_fail_message'));
+                    $data['payment_error'] = $payuFailMessage;
+            ]]></add>
+        </operation>
+        <operation>
             <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
             <add position="before"><![CDATA[
                 if (isset($_GET['error'])) {
-                    $data['payment_error'] = $this->config->get('payment_payu_fail_message');
+                    if (! isset($data['payment_error'])) { // If testing this without an order_id session
+                        $data['payment_error'] = $this->config->get('payment_payu_fail_message');
+                    }
                     $this->document->setTitle('PayU error!');
                 }
             ]]></add>

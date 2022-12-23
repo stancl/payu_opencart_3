@@ -210,6 +210,10 @@ class ControllerExtensionPaymentPayU extends Controller
 
                         if ($comment) {
                             $notify = true;
+
+                            $payuOrderTotal = (string) ((float) $order['total']);
+                            $retryUrl = $this->url->link('extension/payment/payu/retry') . "&orderId={$order['order_id']}&email={$order['email']}&total={$payuOrderTotal}";
+                            $comment = str_replace('%retry%', $retryUrl, $comment);
                         } else {
                             $comment = 'PayU Notification'; // displayed in the admin panel
                         }
