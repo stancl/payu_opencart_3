@@ -45,3 +45,11 @@ $_['error_signaturekey'] = '"Second key (MD5)" is required!';
 $_['error_oauth_client_id'] = '"OAuth protocol - client_id" is required!';
 $_['error_oauth_client_secret'] = '"OAuth protocol - client_secret" is required!';
 $_['error_environment'] = 'The environment must be "secure" or "sandbox"!';
+
+// Order detail
+$_['status_pending'] = 'Pending';
+$_['status_canceled'] = 'Canceled';
+$_['status_completed'] = 'Completed';
+$_['status_waiting_for_confirmation'] = 'Waiting for confirmation';
+$_['copy_payu_link'] = 'Copy payment link';
+$_['payu_link_copied'] = 'Link copied!';

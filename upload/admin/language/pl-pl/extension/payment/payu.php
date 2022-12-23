@@ -45,3 +45,11 @@ $_['error_signaturekey'] = 'Podanie "Drugi klucz (MD5)" jest wymagane!';
 $_['error_oauth_client_id'] = 'Podanie "OAuth - client_id" jest wymagane!';
 $_['error_oauth_client_secret'] = 'Podanie "OAuth - client_secret" wymagane!';
 $_['error_environment'] = 'Środowisko musi być "secure" lub "sandbox"!';
+
+// Order detail
+$_['status_pending'] = 'Czeka';
+$_['status_canceled'] = 'Odwołany';
+$_['status_completed'] = 'Płatny';
+$_['status_waiting_for_confirmation'] = 'Oczekując potwierdzenia';
+$_['copy_payu_link'] = 'Skopiuj link, aby zapłacić';
+$_['payu_link_copied'] = 'Link skopiowany!';

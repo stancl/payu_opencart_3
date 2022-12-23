@@ -45,3 +45,11 @@ $_['error_signaturekey'] = '"Druhý klíč (MD5)" je povinný!';
 $_['error_oauth_client_id'] = '"Protokol OAuth - client_id" je povinné!';
 $_['error_oauth_client_secret'] = '"Protokol OAuth - client_secret" je povinné!';
 $_['error_environment'] = 'Prostředí musí být "secure" nebo "sandbox"!';
+
+// Order detail
+$_['status_pending'] = 'Čeká';
+$_['status_canceled'] = 'Storno';
+$_['status_completed'] = 'Zaplaceno';
+$_['status_waiting_for_confirmation'] = 'Čeká na potvrzení';
+$_['copy_payu_link'] = 'Kopírovat odkaz k zaplacení';
+$_['payu_link_copied'] = 'Odkaz zkopírován!';

@@ -20,5 +20,4 @@ $_['text_error_message'] = 'Nie udało się utworzyć zamówienia w Systemie Pay
 // Retry payment
 $_['retry_not_found'] = 'Nie znaleziono zamówienia.';
 $_['retry_already_paid'] = 'Zamówienie zostało już opłacone.';
-$_['retry_pending'] = 'Rejestrujemy płatność za zamówienie, które jest jeszcze w trakcie realizacji. Spróbuj ponownie później.';
 $_['retry_pay_button'] = 'Płacić';

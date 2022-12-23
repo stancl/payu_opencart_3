@@ -77,12 +77,16 @@ class ControllerExtensionPaymentPayU extends Controller
                 return;
             }
 
-            if ($session['status'] === 'PENDING') {
-                // TODO: Not sure how this deals with bounces (i.e. customer leaving the payment page). Will adjust code if needed. Ideally PayU will send a cancelation after some time.
-                $this->response->setOutput($this->language->get('pending'));
+            if ($session['status'] === 'WAITING_FOR_CONFIRMATION') {
+                $this->response->setOutput($this->language->get('retry_already_paid'));
 
                 return;
             }
+
+            // If the status is 'PENDING', that means:
+            //    1. The order was paid and we're still awaiting a payment. This would likely only be in a period of a few seconds at the very most.
+            //       So it's assumed that it's impossible that the customer would be visiting this page after paying (but before our server is notified).
+            //    2. The customer left the payment page. PayU doesn't seem to send a CANCELED notification to our app, so we create a new payment.
         }
 
         $payuOrder = $this->buildOrder($order['order_id']);
@@ -106,7 +110,7 @@ class ControllerExtensionPaymentPayU extends Controller
 
                 $this->response->addHeader('Location: ' . $paymentUrl);
                 $this->response->setOutput("<a href='$paymentUrl'>Zaplatit</a>");
-            } else {;
+            } else {
                 $this->logger->write('OCR: ' . serialize($payuOrder));
                 $this->logger->write($response->getError() . ' [request: ' . serialize($response) . ']');
                 $this->response->setOutput(
@@ -303,9 +307,9 @@ class ControllerExtensionPaymentPayU extends Controller
         //OCR shipping
         if ($order_info['shipping_code']) {
             $totals = $this->model_checkout_order->getOrderTotals($order_info['order_id']);
-            $shipping = array_filter($totals, function ($total) {
+            $shipping = array_values(array_filter($totals, function ($total) {
                 return $total['code'] === 'shipping';
-            });
+            }))[0];
 
             $this->buildShippingInOrder(['title' => $shipping['title'], 'cost' => $shipping['value']], $order_info['currency_code']);
         }

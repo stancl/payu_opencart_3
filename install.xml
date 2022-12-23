@@ -4,7 +4,7 @@
     <name>PayU Integration</name>
     <version>1.0.0</version>
     <author>Samuel Štancl</author>
-    <link>https://github.com/stancl/plugin_opencart_3</link>
+    <link>https://github.com/stancl/payu_opencart_3</link>
     <file path="catalog/view/theme/default/template/common/success.twig">
         <operation>
             <search><![CDATA[<div id="content" class="{{ class }}">{{ content_top }}]]></search>
@@ -34,6 +34,78 @@
                     $data['payment_error'] = $this->config->get('payment_payu_fail_message');
                     $this->document->setTitle('PayU error!');
                 }
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/controller/sale/order.php">
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('sale/order_info', $data));]]></search>
+            <add position="before"><![CDATA[
+                if ($order_info['payment_code'] === 'payu') {
+                    $data['payu_used'] = true;
+
+                    $payuLang = new Language($this->config->get('config_language'));
+                    $payuLang->load('extension/payment/payu');
+
+                    $payuOrderTotal = (string) ((float) $order_info['total']);
+                    $data['payu_payment_link'] = rtrim($data['catalog'], '/') . "/index.php?route=extension/payment/payu/retry&orderId={$order_info['order_id']}&email={$order_info['email']}&total={$payuOrderTotal}";
+                    $data['text_payu_copy_link'] = $payuLang->get('copy_payu_link');
+                    $data['text_payu_copied_alert'] = $payuLang->get('payu_link_copied');
+
+                    $this->load->model('extension/payment/payu');
+
+                    $payuStatus = $this->model_extension_payment_payu->getOrderStatus($order_info['order_id']);
+                    $data['payu_paid'] = $payuStatus === 'COMPLETED' || $payuStatus == 'WAITING_FOR_CONFIRMATION';
+
+                    if ($payuStatus === 'PENDING') {
+                        $data['payu_status_text'] = $payuLang->get('status_pending');
+                        $data['payu_status_color'] = 'orange';
+                    } else if ($payuStatus === 'WAITING_FOR_CONFIRMATION') {
+                        $data['payu_status_text'] = $payuLang->get('status_waiting_for_confirmation');
+                        $data['payu_status_color'] = 'orange';
+                    } else if ($payuStatus === 'COMPLETED') {
+                        $data['payu_status_text'] = $payuLang->get('status_completed');
+                        $data['payu_status_color'] = 'green';
+                    } else if ($payuStatus === 'CANCELED') {
+                        $data['payu_status_text'] = $payuLang->get('status_canceled');
+                        $data['payu_status_color'] = 'red';
+                    } else {
+                        $data['payu_status_text'] = 'Unknown!';
+                        $data['payu_status_color'] = 'black';
+                    }
+                } else {
+                    $data['payu_used'] = false;
+                }
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/sale/order_info.twig">
+        <operation>
+            <search><![CDATA[<td>{{ text_affiliate }}]]></search>
+            <add position="before"><![CDATA[
+                {% if payu_used %}
+                <td>Stav PayU</td>
+                <td class="text-right" style="color: {{ payu_status_color }}; font-weight: bold;">{{ payu_status_text }}</td>
+                <td class="text-center">
+                    <button
+                    {% if payu_paid %}
+                        disabled
+                    {% else %}
+                        onclick="navigator.clipboard.writeText('{{ payu_payment_link }}').then(() => alert('{{ text_payu_copied_alert }}'))"
+                    {% endif %}
+                    id="button-payu-link"
+                    data-loading-text="{{ text_loading }}"
+                    data-toggle="tooltip"
+                    title="{{ text_payu_copy_link }}"
+                    class="btn btn-success btn-xs"
+                    >
+                        <i class="fa fa-link"></i>
+                    </button>
+                </td>
+                </tr><tr>
+                {% endif %}
             ]]></add>
         </operation>
     </file>

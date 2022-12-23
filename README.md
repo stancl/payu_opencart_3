@@ -7,9 +7,8 @@
 * Jeżeli używasz OpenCart w wersji 2.0.x, 2.1.x lub 2.2.x proszę skorzystać z [pluginu w wersji 3.1.x][ext2]
 
 ## TODOs
-- Link to retry link right in the error message
-- Button for retrying payment in admin panel
-- Notification messages could be textareas to support multi-line comments
+- Link to retry page right in the error message (likely search for `<td>{{ text_affiliate }}`)
+- Link to retry page in email
 
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
 - Shows error on fail (instead of a success message — on the `checkout/success` route)
@@ -24,7 +23,7 @@ You can view all of the changes here: [`bfcfc5b...HEAD`](https://github.com/stan
 
 ## Installation
 
-[Download this repo as a zip](https://github.com/stancl/payu_opencart_3/archive/refs/heads/master.zip), extract the folder, and then compress the *contents of that folder* into a new zip that ends in `.ocmod.zip`.
+[Download this repo as a zip](https://github.com/stancl/payu_opencart_3/archive/refs/heads/master.zip), extract the folder, and then compress the *contents of that folder* into a new zip that ends in `.ocmod.zip`. Meaning: `install.xml` should be at the root of the zip file.
 
 ## Customer notifications
 
@@ -39,7 +38,7 @@ A few notes:
     - After the customer makes a payment: `PayU Notifications Status: Pending` is set
     - Immediately afterwards: `PayU Notifications Status: Completed` is set
     - **Therefore**: you likely don't want to be sending notifications for the *Pending* status
-- The same happens with unsuccessful payments. The only difference is that the last notification is for `Cancelled` instead of `Completed`, but the rest of the flow is identical (including `Pending` being sent first).
+- The same happens with unsuccessful payments. The only difference is that the last notification is for `Canceled` instead of `Completed`, but the rest of the flow is identical (including `Pending` being sent first).
 
 If the *PayU Notifications email* field is empty (for any status), the extension will not notify the customer about the status being set, and it will use `PayU Notification` as the comment, to make it clear that the status comes from PayU.
 
@@ -84,6 +83,12 @@ To play with the sandbox environment locally, I do this:
 (`opencart.test` being the local domain I use to visit the site without ngrok)
 
 To test email, I use [Mailtrap](https://mailtrap.io/).
+
+## Development notes
+
+- The repo uses `canceled` and `cancelled` inconsistently. I kept the inconsistency for backwards compatibility with the old repo (and old config data).
+    - `CANCELED` is used in the context of PayU responses
+    - `cancelled` is used in the context of language strings, config keys, and everything that relates to the extension settings page
 
 ## Spis treści
 
