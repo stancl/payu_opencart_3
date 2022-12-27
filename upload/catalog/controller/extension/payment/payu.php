@@ -67,6 +67,12 @@ class ControllerExtensionPaymentPayU extends Controller
             return;
         }
 
+        if ($order['payment_code'] !== 'payu') {
+            $this->response->setOutput($this->language->get('retry_not_found'));
+
+            return;
+        }
+
         $this->load->model('extension/payment/payu');
         $sessions = $this->model_extension_payment_payu->getSessionsForOrder($order['order_id']);
 
@@ -179,7 +185,6 @@ class ControllerExtensionPaymentPayU extends Controller
     //Notification
     public function ordernotify()
     {
-
         $this->loadLibConfig();
         $this->load->model('extension/payment/payu');
         $this->load->model('checkout/order');
@@ -336,7 +341,8 @@ class ControllerExtensionPaymentPayU extends Controller
                 'email' => $order_info['email'],
                 'firstName' => $order_info['firstname'],
                 'lastName' => $order_info['lastname'],
-                'phone' => $order_info['telephone']
+                'phone' => $order_info['telephone'],
+                'language' => substr($this->session->data['language'], 0, 2),
             );
         }
     }

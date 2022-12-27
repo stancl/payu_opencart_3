@@ -82,6 +82,7 @@ To test email, I use [Mailtrap](https://mailtrap.io/).
 - The repo uses `canceled` and `cancelled` inconsistently. I kept the inconsistency for backwards compatibility with the old repo (and old config data).
     - `CANCELED` is used in the context of PayU responses
     - `cancelled` is used in the context of language strings, config keys, and everything that relates to the extension settings page
+- If you're using Cloudflare in production, make sure the `/index.php?route=extension/payment/payu/ordernotify` path has disabled *Browser Integrity Check* in Page Rules.
 
 **Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext7].**
 

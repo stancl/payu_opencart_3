@@ -40,12 +40,14 @@
             <search><![CDATA[if (isset($this->session->data['order_id'])) {]]></search>
             <add position="after"><![CDATA[
                     $this->load->model('checkout/order');
-
                     $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-                    $payuOrderTotal = (string) ((float) $order_info['total']);
-                    $payuRetryUrl = $this->url->link('extension/payment/payu/retry') . "&orderId={$order_info['order_id']}&email={$order_info['email']}&total={$payuOrderTotal}";
-                    $payuFailMessage = str_replace('%retry%', $payuRetryUrl, $this->config->get('payment_payu_fail_message'));
-                    $data['payment_error'] = $payuFailMessage;
+
+                    if ($order_info['payment_code'] === 'payu' && isset($_GET['error'])) {
+                        $payuOrderTotal = (string) ((float) $order_info['total']);
+                        $payuRetryUrl = $this->url->link('extension/payment/payu/retry') . "&orderId={$order_info['order_id']}&email={$order_info['email']}&total={$payuOrderTotal}";
+                        $payuFailMessage = str_replace('%retry%', $payuRetryUrl, $this->config->get('payment_payu_fail_message'));
+                        $data['payment_error'] = $payuFailMessage;
+                    }
             ]]></add>
         </operation>
         <operation>
