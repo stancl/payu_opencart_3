@@ -29,7 +29,10 @@ class ControllerExtensionPaymentPayU extends Controller
         OpenPayU_Configuration::setOauthClientSecret($this->config->get('payment_payu_oauth_client_secret'));
         OpenPayU_Configuration::setEnvironment($this->config->get('payment_payu_environment'));
         OpenPayU_Configuration::setSender('OpenCart ver ' . VERSION . ' / Plugin ver ' . self::VERSION);
-        $this->logger = new Log('payu.log');
+
+        if (! isset($this->logger)) {
+            $this->logger = new Log('payu.log');
+        }
     }
 
     public function index()
@@ -192,6 +195,29 @@ class ControllerExtensionPaymentPayU extends Controller
         $body = file_get_contents('php://input');
         $data = trim($body);
 
+        $notification_data = json_decode($data, true);
+
+        $extOrderId = null;
+        if (isset($notification_data['extOrderId'])) {
+            $extOrderId = $notification_data['extOrderId'];
+        } elseif (isset($notification_data['order'])) {
+            if (isset($notification_data['order']['extOrderId'])) {
+                $extOrderId = $notification_data['order']['extOrderId'];
+            }
+        }
+
+        if ($extOrderId) {
+            // Not sure if this is just the sandbox but the $extOrderId seems to be suffixed with -randomCharacters
+            // So when that's the case, we trim the suffix
+            if ($pos = strpos($extOrderId, '-')) {
+                $extOrderId = substr($extOrderId, 0, $pos);
+            }
+
+            $this->setSecondaryKeysIfNeeded(
+                $this->model_checkout_order->getOrder($extOrderId)
+            );
+        }
+
         try {
             if (!empty($data)) {
                 $result = OpenPayU_Order::consumeNotification($data);
@@ -213,6 +239,8 @@ class ControllerExtensionPaymentPayU extends Controller
                         $newstatus = $this->getPaymentStatusId($payuOrderStatus);
                         $comment = $this->getPaymentStatusEmail($payuOrderStatus);
 
+                        $notify = false;
+
                         if ($comment) {
                             $notify = true;
 
@@ -227,7 +255,6 @@ class ControllerExtensionPaymentPayU extends Controller
                             $this->model_extension_payment_payu->updateSatatus($session_id, $payuOrderStatus);
                             $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus, $comment, $notify);
                         }
-
                     }
                 }
             }
@@ -294,6 +321,8 @@ class ControllerExtensionPaymentPayU extends Controller
         $this->load->model('checkout/order');
         $order_info = $this->model_checkout_order->getOrder($orderId ?: $this->session->data['order_id']);
 
+        $this->setSecondaryKeysIfNeeded($order_info);
+
         //OCR basic data
         $this->ocr['merchantPosId'] = OpenPayU_Configuration::getMerchantPosId();
         $this->ocr['description'] = $this->language->get('text_payu_order') . ' #' . $order_info['order_id'];
@@ -329,6 +358,20 @@ class ControllerExtensionPaymentPayU extends Controller
 
         return $this->ocr;
 
+    }
+
+    /**
+     * @param array $order_info
+     */
+    private function setSecondaryKeysIfNeeded($order_info)
+    {
+        $secondary_geo_zone = $this->config->get('payment_payu_secondary_geo_zone_id');
+        if ($secondary_geo_zone && $this->model_extension_payment_payu->matchGeoZone($order_info['payment_zone_id'], $secondary_geo_zone)) {
+            OpenPayU_Configuration::setMerchantPosId($this->config->get('payment_payu_secondary_merchantposid'));
+            OpenPayU_Configuration::setSignatureKey($this->config->get('payment_payu_secondary_signaturekey'));
+            OpenPayU_Configuration::setOauthClientId($this->config->get('payment_payu_secondary_oauth_client_id'));
+            OpenPayU_Configuration::setOauthClientSecret($this->config->get('payment_payu_secondary_oauth_client_secret'));
+        }
     }
 
     /**

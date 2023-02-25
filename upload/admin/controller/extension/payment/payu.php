@@ -58,6 +58,23 @@ class ControllerExtensionPaymentPayU extends Controller {
         $data['payment_payu_oauth_client_secret'] = isset($this->request->post['payment_payu_oauth_client_secret']) ?
             $this->request->post['payment_payu_oauth_client_secret'] : $this->config->get('payment_payu_oauth_client_secret');
 
+        // SECONDARY
+        $data['payment_payu_secondary_geo_zone_id'] = isset($this->request->post['payment_payu_secondary_geo_zone_id']) ?
+            $this->request->post['payment_payu_secondary_geo_zone_id'] : $this->config->get('payment_payu_secondary_geo_zone_id');
+
+        $data['payment_payu_secondary_merchantposid'] = isset($this->request->post['payment_payu_secondary_merchantposid']) ?
+            $this->request->post['payment_payu_secondary_merchantposid'] : $this->config->get('payment_payu_secondary_merchantposid');
+
+        $data['payment_payu_secondary_signaturekey'] = isset($this->request->post['payment_payu_secondary_signaturekey']) ?
+            $this->request->post['payment_payu_secondary_signaturekey'] : $this->config->get('payment_payu_secondary_signaturekey');
+
+        $data['payment_payu_secondary_oauth_client_id'] = isset($this->request->post['payment_payu_secondary_oauth_client_id']) ?
+            $this->request->post['payment_payu_secondary_oauth_client_id'] : $this->config->get('payment_payu_secondary_oauth_client_id');
+
+        $data['payment_payu_secondary_oauth_client_secret'] = isset($this->request->post['payment_payu_secondary_oauth_client_secret']) ?
+            $this->request->post['payment_payu_secondary_oauth_client_secret'] : $this->config->get('payment_payu_secondary_oauth_client_secret');
+        // /SECONDARY
+
         $data['payment_payu_status'] = isset($this->request->post['payment_payu_status']) ?
             $this->request->post['payment_payu_status'] : $this->config->get('payment_payu_status');
 
@@ -155,6 +172,7 @@ class ControllerExtensionPaymentPayU extends Controller {
             'payment_payu_cancelled_status' => 7,
             'payment_payu_waiting_for_confirmation_status' => 1,
             'payment_payu_geo_zone_id' => 0,
+            'payment_payu_secondary_geo_zone_id' => 0, // disabled
             'payment_payu_sort_order' => 1,
             'payment_payu_environment' => 'secure',
             'payment_payu_fail_message' => 'Payment failed. The order has been canceled. To try again, please create a new order.',

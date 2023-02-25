@@ -5,6 +5,7 @@
 - Shows error on fail (instead of a success message — on the `checkout/success` route)
 - [Lets you use the sandbox environment](#local-development)
 - [Lets you send customers email notifications](#customer-notifications)
+- [Supports secondary credentials](#secondary-credentials)
 
 The repo is primarily for internal use but I made it public in case it helps anyone. There's no guarantee of support or long-term maintenance.
 
@@ -35,6 +36,18 @@ A few notes:
 
 If the *PayU Notifications email* field is empty (for any status), the extension will not notify the customer about the status being set, and it will use `PayU Notification` as the comment, to make it clear that the status comes from PayU.
 
+## Secondary credentials
+
+Another feature of this fork is secondary credentials/POS. This lets you use *one* different POS for a specified region.
+
+This can be helpful when you have a secondary POS for a different country and want to receive money in their local currency. In this case PayU sends you an additional contract and creates a special POS in your account.
+
+To use this feature, simply fill out the `[SECONDARY]` credentials and pick the geo zone that they should be used in.
+
+**Important**: your primary geo zone (the one specified for the extension as a whole) must be a superset of the secondary geo zone. In other words, it must include both the main region/regions and the secondary region that has a special POS.
+
+This is because the extension's geo zone is used *by OpenCart* to determine whether the payment method should be offered at all, whereas the secondary geo zone is used *inside* the extension to determine which credentials should be used.
+
 ## Testing cards
 
 | Card number      | Expiration | CVV | Behavior                          |
@@ -55,22 +68,22 @@ The sandbox credentials mentioned in the docs are:
 | OAuth client_id     | 145227                           |
 | OAuth client_secret | 12f071174cb7eb79d4aac5bc2f07563f |
 
-However, these don't seem to work on my end. So I use a custom POS created in the sandbox environment.
+However, these don't seem to work on my end. So I use a custom POS created in the [sandbox environment](https://merch-prod.snd.payu.com/user/login).
 
 Since I use ngrok (see the section below), I have to create a new POS every time I have a new ngrok subdomain.
 
 ### Local development
 
 To play with the sandbox environment locally, I do this:
-- host the site using simple `php -S` (`/opt/homebrew/Cellar/php@7.3/7.3.33_3/bin/php -S localhost:8888` since I'm using a specific binary to match OC's PHP version)
+- host the site using simple `php -S` (`/opt/homebrew/Cellar/php@7.3/7.3.33_4/bin/php -S localhost:8888` since I'm using a specific binary to match OC's PHP version)
 - share the site using `ngrok http 8888`
-- modify `config.php` to use the `HTTP_HOST` for `HTTP_SERVER` & `HTTPS_SERVER` (though you have to revert this when using the site normally w/o ngrok):
+- modify `config.php` to use the `HTTP_HOST` for `HTTP_SERVER` & `HTTPS_SERVER`
 
 ```diff
 - define('HTTP_SERVER', 'http://opencart.test/');
-+ define('HTTP_SERVER', 'http://' . $_SERVER['HTTP_HOST'] . '/');
++ define('HTTP_SERVER', isset($_SERVER['HTTP_HOST']) ? ('http://' . $_SERVER['HTTP_HOST'] . '/') : 'http://opencart.test/');
 - define('HTTPS_SERVER', 'http://opencart.test/');
-+ define('HTTPS_SERVER', 'https://' . $_SERVER['HTTP_HOST'] . '/');
++ define('HTTPS_SERVER', isset($_SERVER['HTTP_HOST']) ? ('https://' . $_SERVER['HTTP_HOST'] . '/') : 'https://opencart.test/');
 ```
 
 (`opencart.test` being the local domain I use to visit the site without ngrok)
@@ -83,6 +96,11 @@ To test email, I use [Mailtrap](https://mailtrap.io/).
     - `CANCELED` is used in the context of PayU responses
     - `cancelled` is used in the context of language strings, config keys, and everything that relates to the extension settings page
 - If you're using Cloudflare in production, make sure the `/index.php?route=extension/payment/payu/ordernotify` path has disabled *Browser Integrity Check* in Page Rules.
+
+### Future improvements
+
+- Possibly ignore CANCELED notifications when the order has already been paid. This can happen when there are multiple transactions for one order and the store admin cancels the ones that weren't used.
+- Line ~63 in `install.xml` with the note about the rare edge case that can happen with the fail message session and retry links from the admin panel
 
 **Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext7].**
 

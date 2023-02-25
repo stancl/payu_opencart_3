@@ -77,4 +77,44 @@ class ModelExtensionPaymentPayu extends Model
 
         return $result;
     }
+
+    /**
+     * Try to match order's payment_zone_id with a specified geo_zone_id
+     *
+     * @param int|string $paymentZoneId
+     * @return bool
+     */
+    public function matchGeoZone($paymentZoneId, $geoZoneId)
+    {
+        // Try to find a geo zone that has the payment zone directly mapped to it
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE zone_id = '" . (int)$paymentZoneId . "'");
+
+        if (!$query->rows) {
+            // If we cannot find a geo zone that has the payment zone mapped directly, fetch the
+            // country for the payment zone and then look for geo zones mapped to that country.
+
+            $country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE zone_id = '" . (int)$paymentZoneId . "'");
+
+            if ($country_query->rows) {
+                // Country mapping found, so we rewrite the original query to use the country instead of zone_id
+                $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE country_id = '" . (int)$country_query->row['country_id'] . "'");
+            } else {
+                return false;
+            }
+        }
+
+        if (!$query->rows) {
+            // If there are still no rows found, then there's no direct payment zone mapping or a country mapping, therefore we return false
+            return false;
+        }
+
+        foreach ($query->rows as $row) {
+            // Now we check if any of the mapped geo zones match the provided geo zone
+            if (((int) $row['geo_zone_id']) == ((int) $geoZoneId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

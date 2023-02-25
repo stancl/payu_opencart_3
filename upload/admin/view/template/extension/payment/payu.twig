@@ -68,7 +68,7 @@
                             <select name="payment_payu_geo_zone_id" id="input-geo-zone" class="form-control">
                                 <option value="0">{{ text_all_zones }}</option>
                                 {% for geo_zone in geo_zones %}
-                                    {% if geo_zone.geo_zone_id == payment_payza_geo_zone_id %}
+                                    {% if geo_zone.geo_zone_id == payment_payu_geo_zone_id %}
                                         <option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
                                     {% else %}
                                         <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
@@ -99,7 +99,7 @@
                     </div>
 
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-merchantposid"> {{ entry_merchantposid }}</label>
+                        <label class="col-sm-2 control-label" for="input-merchantposid">{{ entry_merchantposid }}</label>
                         <div class="col-sm-10">
                             <input type="text" name="payment_payu_merchantposid" value="{{ payment_payu_merchantposid }}" id="input-merchantposid" class="form-control" />
                             {% if error_merchantposid %}
@@ -129,12 +129,56 @@
                     </div>
 
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-oauth_client_secret"> {{ entry_oauth_client_secret }}</label>
+                        <label class="col-sm-2 control-label" for="input-oauth_client_secret">{{ entry_oauth_client_secret }}</label>
                         <div class="col-sm-10">
                             <input type="text" name="payment_payu_oauth_client_secret" value="{{ payment_payu_oauth_client_secret }}" id="input-oauth_client_secret" class="form-control" />
                             {% if error_oauth_client_secret %}
                             <div class="text-danger">{{ error_oauth_client_secret }}</div>
                             {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secondary-geo-zone">[SECONDARY] {{ entry_geo_zone }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_payu_secondary_geo_zone_id" id="input-secondary-geo-zone" class="form-control">
+                                <option value="0">OFF</option>
+                                {% for geo_zone in geo_zones %}
+                                    {% if geo_zone.geo_zone_id == payment_payu_secondary_geo_zone_id %}
+                                        <option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
+                                    {% else %}
+                                        <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secondary-merchantposid">[SECONDARY] {{ entry_merchantposid }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_secondary_merchantposid" value="{{ payment_payu_secondary_merchantposid }}" id="input-secondary-merchantposid" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secondary-signaturekey">[SECONDARY] {{ entry_signaturekey }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_secondary_signaturekey" value="{{ payment_payu_secondary_signaturekey }}" id="input-secondary-signaturekey" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secondary-oauth_client_id">[SECONDARY] {{ entry_oauth_client_id }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_secondary_oauth_client_id" value="{{ payment_payu_secondary_oauth_client_id }}" id="input-secondary-oauth_client_id" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-secondary-oauth_client_secret">[SECONDARY] {{ entry_oauth_client_secret }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_payu_secondary_oauth_client_secret" value="{{ payment_payu_secondary_oauth_client_secret }}" id="input-secondary-oauth_client_secret" class="form-control" />
                         </div>
                     </div>
 

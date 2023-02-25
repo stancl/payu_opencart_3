@@ -38,15 +38,47 @@
     <file path="catalog/controller/checkout/success.php">
         <operation>
             <search><![CDATA[if (isset($this->session->data['order_id'])) {]]></search>
-            <add position="after"><![CDATA[
-                    $this->load->model('checkout/order');
-                    $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+            <add position="before"><![CDATA[
+                    if (isset($this->session->data['order_id'])) {
+                        $orderIdAvailable = true;
+                        $this->load->model('checkout/order');
+                        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+                    } else {
+                        $orderIdAvailable = false;
+                    }
 
-                    if ($order_info['payment_code'] === 'payu' && isset($_GET['error'])) {
+                    if ($orderIdAvailable && $order_info['payment_code'] === 'payu' && isset($_GET['error'])) {
                         $payuOrderTotal = (string) ((float) $order_info['total']);
                         $payuRetryUrl = $this->url->link('extension/payment/payu/retry') . "&orderId={$order_info['order_id']}&email={$order_info['email']}&total={$payuOrderTotal}";
                         $payuFailMessage = str_replace('%retry%', $payuRetryUrl, $this->config->get('payment_payu_fail_message'));
+
+                        // In case this page gets visited multiple times, the retry URL generation logic won't work because the order_id session gets cleared on the first request
+                        // For that reason, we store the fail message (which includes the retry URL) in a session and use it the next time this page is visited
+                        // If there's no error next time and the session is set, it gets cleared
+
+                        // Note about an edge case (that may come to mind but is handled well): if someone visits this page, gets the FIRST fail message, and leaves without successfully
+                        // paying, the payu_fail_message session *will remain set*. However, the next time they make an order and it fails, this FIRST block will execute, overriding
+                        // the previous payu_fail_message session. So there should be no edge cases where this makes someone pay for an OLD failed order while making a new one
+
+                        // One more edge case (that's not handled but probably too rare) is when a user would:
+                        //    1) make an order that fails, see the error screen. The fail message gets stored
+                        //    2) make another order and abandon the cart
+                        //    3) first order gets canceled by the shop
+                        //    4) the user receives a retry link for the second order
+                        //    5) the user's first attempt (at the retry link) fails. There's no order_id but there is &error so the fail message session *from the first order* is untouched
+                        //    6) the user successfully pays
+                        // In this case, the first order would be paid instead of the second order. However such a scenario seems rare enough that we aren't adding extra logic for handling this
+                        // If we encounter this in practice, we'll fix it in the code.
+                        // Potential fix: store the retry link instead of the fail message, and on the retry page store the current URL as the retry link
+
+                        $this->session->data['payu_fail_message'] = $payuFailMessage;
                         $data['payment_error'] = $payuFailMessage;
+                    } else if (isset($this->session->data['payu_fail_message']) && isset($_GET['error'])) {
+                        // If we're on the error screen for the second time, the order_id session already got cleared, so we're using the fail message (with the retry url) from the previous visit
+                        $data['payment_error'] = $this->session->data['payu_fail_message'];
+                    } else if (isset($this->session->data['payu_fail_message'])) {
+                        // If it's not an initial fail (first block), or a subsequent fail (second block), we clear the fail message session
+                        unset($this->session->data['payu_fail_message']);
                     }
             ]]></add>
         </operation>
@@ -54,8 +86,11 @@
             <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
             <add position="before"><![CDATA[
                 if (isset($_GET['error'])) {
-                    if (! isset($data['payment_error'])) { // If testing this without an order_id session
-                        $data['payment_error'] = $this->config->get('payment_payu_fail_message');
+                    if (! isset($data['payment_error'])) {
+                        // If testing this without an order_id session, we replace the %retry% link with a link to the contact page
+                        // This should only happen with local testing, but there may potentially be edge cases where a user will encounter this with production
+                        // (This has happened in the past when the payment failed multiple times in a row, and the session with the order was cleared. Should be fixed now but we're still keeping some extra handling)
+                        $data['payment_error'] = str_replace('%retry%', $this->url->link('information/contact'), $this->config->get('payment_payu_fail_message'));
                     }
                     $this->document->setTitle('PayU error!');
                 }
