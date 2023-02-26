@@ -15,7 +15,7 @@ You can view all of the changes here: [`bfcfc5b...HEAD`](https://github.com/stan
 
 ## Installation
 
-**[Download the latest release from here](https://github.com/stancl/payu_opencart_3/releases/latest)** (`payu.ocmod.zip` in the Assets section).
+**[Download the latest release from here](https://github.com/stancl/payu_opencart_3/releases/latest)** (`.ocmod.zip` file in the Assets section).
 
 Or, [download this repo as a zip](https://github.com/stancl/payu_opencart_3/archive/refs/heads/master.zip), extract the folder, and then compress the *contents of that folder* into a new zip that ends in `.ocmod.zip`. Meaning: `install.xml` should be at the root of the zip file.
 
