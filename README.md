@@ -3,6 +3,7 @@
 
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
 - Shows error on fail (instead of a success message — on the `checkout/success` route)
+- Czech and Slovak translations
 - [Lets you use the sandbox environment](#local-development)
 - [Lets you send customers email notifications](#customer-notifications)
 - [Supports secondary credentials](#secondary-credentials)

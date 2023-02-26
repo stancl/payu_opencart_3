@@ -39,7 +39,7 @@ $_['help_fail_message'] = 'Chybová hláška, která se zobrazí, když platba n
 $_['help_status_email'] = 'Vyplňte toto pole pro odeslání e-mailu zákazníkovi když se změní stav PayU.';
 
 // Error
-$_['error_permission'] = 'Warning: Nemáte oprávnění upravovat modul PayU!';
+$_['error_permission'] = 'Varování: Nemáte oprávnění upravovat modul PayU!';
 $_['error_merchantposid'] = '"POS ID" je povinné!';
 $_['error_signaturekey'] = '"Druhý klíč (MD5)" je povinný!';
 $_['error_oauth_client_id'] = '"Protokol OAuth - client_id" je povinné!';
