@@ -1,5 +1,4 @@
-# Moduł PayU dla OpenCart wersja 3.x
-``Moduł jest wydawany na licencji GPL.``
+# PayU extension for OpenCart 3.0.2.0
 
 ## Difference between this and the [original repo](https://github.com/PayU-EMEA/plugin_opencart_3)
 - Shows error on fail (instead of a success message — on the `checkout/success` route)
@@ -102,6 +101,8 @@ To test email, I use [Mailtrap](https://mailtrap.io/).
 
 - Possibly ignore CANCELED notifications when the order has already been paid. This can happen when there are multiple transactions for one order and the store admin cancels the ones that weren't used.
 - Line ~63 in `install.xml` with the note about the rare edge case that can happen with the fail message session and retry links from the admin panel
+
+(Original README follows)
 
 **Jeżeli masz jakiekolwiek pytania lub chcesz zgłosić błąd zapraszamy do kontaktu z naszym [wsparciem technicznym][ext7].**
 
