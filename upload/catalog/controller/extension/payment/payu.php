@@ -235,6 +235,14 @@ class ControllerExtensionPaymentPayU extends Controller
                     $payuOrderStatus = $orderRetrive->getResponse()->orders[0]->status;
                     $order = $this->model_checkout_order->getOrder($orderInfo['order_id']);
 
+                    // TODO: If $order['order_status_id'] === $this->config->get('payment_payu_complete_status'), don't accept other notifications
+                    // There's sometimes an issue where a user opens the "retry" page multiple times, pays in one tab, and closes the other sessions.
+                    // This results in the payment being received, and the order status being changed to canceled right after, from the closed sessions.
+                    // We prevent users from opening the retry page if the order has already been paid (the $this->response->setOutput($this->language->get('retry_already_paid')) parts of the code)
+                    // but that doesn't stop users from opening the page multiple times. That's likely how the "canceled after complete" notifications are happening.
+                    // Therefore, we should not accept canceled/other notifications if the order has already been paid.
+                    // However, this should also keep in mind refunds etc, which is why it might require a bit more research before implementing.
+
                     if ($orderInfo['status'] != OpenPayuOrderStatus::STATUS_COMPLETED) {
                         $newstatus = $this->getPaymentStatusId($payuOrderStatus);
                         $comment = $this->getPaymentStatusEmail($payuOrderStatus);
