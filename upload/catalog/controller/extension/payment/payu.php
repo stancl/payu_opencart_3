@@ -261,7 +261,6 @@ class ControllerExtensionPaymentPayU extends Controller
 
         } catch (OpenPayU_Exception $e) {
             $this->logger->write('OCR Notification: ' . $e->getMessage());
-            die($e->getMessage());
         }
 
     }
