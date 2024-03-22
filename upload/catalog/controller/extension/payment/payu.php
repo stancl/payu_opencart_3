@@ -252,7 +252,7 @@ class ControllerExtensionPaymentPayU extends Controller
                         }
 
                         if ($newstatus && $newstatus != $order['order_status']) {
-                            $this->model_extension_payment_payu->updateSatatus($session_id, $payuOrderStatus);
+                            $this->model_extension_payment_payu->updateStatus($session_id, $payuOrderStatus);
                             $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus, $comment, $notify);
                         }
                     }

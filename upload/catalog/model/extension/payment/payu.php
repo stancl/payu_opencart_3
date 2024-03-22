@@ -47,7 +47,7 @@ class ModelExtensionPaymentPayu extends Model
         return $this->db->query($query);
     }
 
-    public function updateSatatus($sessionId, $status)
+    public function updateStatus($sessionId, $status)
     {
         $query = 'UPDATE ' . DB_PREFIX . 'payu_so SET status="'.$this->db->escape($status).'" WHERE session_id ="'.$this->db->escape($sessionId).'"';
         return $this->db->query($query);
