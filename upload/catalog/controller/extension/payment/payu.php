@@ -249,9 +249,7 @@ class ControllerExtensionPaymentPayU extends Controller
 
                     // This block updates the status *of a specific session* and adds order history
                     // If *the session* is already COMPLETED, we don't make any changes
-                    // Also, we don't run this block at all if the order itself has been paid (hasCompletedSession)
-                    // This is to prevent canceling an already paid order, where two sessions are created at once and one succeeds while the other fails.
-                    if ($orderInfo['status'] != OpenPayuOrderStatus::STATUS_COMPLETED && ! $hasCompletedSession) {
+                    if ($orderInfo['status'] != OpenPayuOrderStatus::STATUS_COMPLETED) {
                         $newstatus = $this->getPaymentStatusId($payuOrderStatus);
                         $comment = $this->getPaymentStatusEmail($payuOrderStatus);
 
@@ -267,9 +265,17 @@ class ControllerExtensionPaymentPayU extends Controller
                             $comment = 'PayU Notification'; // displayed in the admin panel
                         }
 
-                        if ($newstatus && $newstatus != $order['order_status']) {
+                        if ($newstatus) {
+                            // We always update the session in our database
                             $this->model_extension_payment_payu->updateStatus($session_id, $payuOrderStatus);
-                            $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus, $comment, $notify);
+
+                            // ... but we only add order history if the order hadn't been paid before.
+                            // This means that we always get an accurate list of all payment sessions in our database
+                            // but don't change the order status or notify the customer if he managed to create a new payment
+                            // session (that will get canceled) after having already paid.
+                            if (! $hasCompletedSession) {
+                                $this->model_checkout_order->addOrderHistory($orderInfo['order_id'], $newstatus, $comment, $notify);
+                            }
                         }
                     }
                 }
