@@ -6,6 +6,7 @@
 - [Lets you use the sandbox environment](#local-development)
 - [Lets you send customers email notifications](#customer-notifications)
 - [Supports secondary credentials](#secondary-credentials)
+- **Important**: hardcoded country checks to prevent using PayU with foreign (EU) billing address + VAT no. This can be removed or customized, see `upload/catalog/model/extension/payu.php::getMethod()`
 
 The repo is primarily for internal use but I made it public in case it helps anyone. There's no guarantee of support or long-term maintenance.
 

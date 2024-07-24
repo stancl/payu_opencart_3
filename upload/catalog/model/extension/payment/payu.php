@@ -26,6 +26,18 @@ class ModelExtensionPaymentPayu extends Model
             $status = false;
         }
 
+        // Remove if not desired
+        // This block disables the payment method if SK billing address + VAT no. is provided
+        // The implementation, however, is shop-specific (hardcoded custom field numbers etc)
+        if (
+            $status &&
+            $address['country_id'] == 189 &&
+            isset($address['custom_field']) &&
+            isset($address['custom_field'][2]) &&
+            strlen($address['custom_field'][2]) > 6 // valid VAT no., not e.g. autofilled zip code
+        ) {
+            $status = false;
+        }
 
         $method_data = array();
         if ($status) {
