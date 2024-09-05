@@ -64,6 +64,7 @@ class ControllerExtensionPaymentPayU extends Controller
         $order = $this->model_checkout_order->getOrder($orderId);
 
         $orderTotal = (float) $order['total'];
+        $email = str_replace(' ', '+', $email); // handle emails with + in them
         if (($email !== $order['email']) || ($total !== $orderTotal)) {
             $this->response->setOutput($this->language->get('retry_not_found'));
 
